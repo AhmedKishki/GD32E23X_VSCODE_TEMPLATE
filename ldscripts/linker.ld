@@ -1,6 +1,7 @@
 /* memory map */
 MEMORY
 {
+    /* BOOTLOADER  (rx) : ORIGIN = 0x08000000, LENGTH = 0x00002000  /* 8 KB   */
     APPLICATION (rx) : ORIGIN = 0x08000000, LENGTH = 0x0000DC00  /* 55 KB  */
     RESERVED    (rx) : ORIGIN = 0x0800FC00, LENGTH = 0x00000400  /* 1 KB   */
 
