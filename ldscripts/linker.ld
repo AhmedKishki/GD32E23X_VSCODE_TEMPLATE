@@ -1,7 +1,7 @@
 /* memory map */
 MEMORY
 {
-    APPLICATION (rx) : ORIGIN = 0x08000000, LENGTH = 0x0000DC00  /* 63 KB  */
+    APPLICATION (rx) : ORIGIN = 0x08000000, LENGTH = 0x0000DC00  /* 55 KB  */
     RESERVED    (rx) : ORIGIN = 0x0800FC00, LENGTH = 0x00000400  /* 1 KB   */
 
     /* 8 KB total: 0x1F00 (7936 B) for data/bss, 0x0100 (256 B) for stack */
