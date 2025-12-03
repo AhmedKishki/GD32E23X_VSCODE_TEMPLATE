@@ -1,24 +1,25 @@
 /* memory map */
 MEMORY
 {
-    APPLICATION (rx) : ORIGIN = 0x08002000, LENGTH = 55K
-    RESERVED    (rx) : ORIGIN = 0x0800FC00, LENGTH = 1K
-    RAM         (xrw): ORIGIN = 0x20000000, LENGTH = 8K
+    APPLICATION (rx) : ORIGIN = 0x08000000, LENGTH = 0x0000DC00  /* 63 KB  */
+    RESERVED    (rx) : ORIGIN = 0x0800FC00, LENGTH = 0x00000400  /* 1 KB   */
+
+    /* 8 KB total: 0x1F00 (7936 B) for data/bss, 0x0100 (256 B) for stack */
+    RAM         (xrw): ORIGIN = 0x20000000, LENGTH = 0x00001F00  /* 7936 B */
+    STACK       (xrw): ORIGIN = 0x20001F00, LENGTH = 0x00000100  /* 256 B  */
 }
 
 ENTRY(Reset_Handler)
 
 SECTIONS
 {
-  __stack_size = DEFINED(__stack_size) ? __stack_size : 2K;
-
-/* ISR vectors */
+  /* ISR vectors */
   .vectors :
   {
     . = ALIGN(4);
     KEEP(*(.vectors))
     . = ALIGN(4);
-    __Vectors_End = .;
+    __Vectors_End  = .;
     __Vectors_Size = __Vectors_End - __gVectors;
   } >APPLICATION
 
@@ -35,7 +36,7 @@ SECTIONS
     KEEP (*(.fini))
 
     . = ALIGN(4);
-    /* the symbol ¡®_etext¡¯ will be defined at the end of code section */
+    /* the symbol '_etext' will be defined at the end of code section */
     _etext = .;
   } >APPLICATION
 
@@ -52,13 +53,17 @@ SECTIONS
      *(.ARM.extab* .gnu.linkonce.armextab.*)
   } >APPLICATION
 
-  .ARM : {
+  .ARM :
+  {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
   } >APPLICATION
 
-  .ARM.attributes : { *(.ARM.attributes) } > APPLICATION
+  .ARM.attributes :
+  {
+    *(.ARM.attributes)
+  } >APPLICATION
 
   .preinit_array :
   {
@@ -85,44 +90,51 @@ SECTIONS
 
   /* provide some necessary symbols for startup file to initialize data */
   _sidata = LOADADDR(.data);
+
   .data :
   {
     . = ALIGN(4);
-    /* the symbol ¡®_sdata¡¯ will be defined at the data section end start */
+    /* the symbol '_sdata' will be defined at the data section start */
     _sdata = .;
     *(.data)
     *(.data*)
     . = ALIGN(4);
-    /* the symbol ¡®_edata¡¯ will be defined at the data section end */
+    /* the symbol '_edata' will be defined at the data section end */
     _edata = .;
-  } >RAM AT> APPLICATION
+  } >RAM AT>APPLICATION
 
   . = ALIGN(4);
   .bss :
   {
-    /* the symbol ¡®_sbss¡¯ will be defined at the bss section start */
+    /* the symbol '_sbss' will be defined at the bss section start */
     _sbss = .;
     __bss_start__ = _sbss;
     *(.bss)
     *(.bss*)
     *(COMMON)
     . = ALIGN(4);
-    /* the symbol ¡®_ebss¡¯ will be defined at the bss section end */
+    /* the symbol '_ebss' will be defined at the bss section end */
     _ebss = .;
     __bss_end__ = _ebss;
   } >RAM
 
   . = ALIGN(8);
-  PROVIDE ( end = _ebss );
+  PROVIDE ( end  = _ebss );
   PROVIDE ( _end = _ebss );
 
-  .stack ORIGIN(RAM) + LENGTH(RAM) - __stack_size :
+  /* Dedicated STACK region: size = LENGTH(STACK) = 0x100 (256 B) */
+  .stack (NOLOAD) :
   {
+    /* bottom of stack region = also end of heap, if you ever use it */
+    . = ORIGIN(STACK);
     PROVIDE( _heap_end = . );
-    . = __stack_size;
-    PROVIDE( _sp = . );
-  } >RAM AT>RAM
-  
+
+    /* top of stack (MSP reset value) */
+    . = ORIGIN(STACK) + LENGTH(STACK);
+    PROVIDE( _sp     = . );
+    PROVIDE( _estack = . );
+  } >STACK
+
   .RESERVED :
   {
     . = ALIGN(4);
@@ -131,5 +143,5 @@ SECTIONS
   } > RESERVED
 }
 
- /* input sections */
+/* input sections */
 GROUP(libgcc.a libc.a libm.a libnosys.a)
