@@ -1,0 +1,20 @@
+# === Project and firmware version ===
+PROJECT := $(notdir $(CURDIR))
+DEVICE  := GD32E230
+
+# Firmware version
+FW_VERSION_MAJOR ?= 2
+FW_VERSION_MINOR ?= 0
+FW_VERSION_PATCH ?= 0
+
+# M99_MINI_II
+# PRODUCT_NAME := M99_MINI_II
+# PRODUCT_ID   := 1160111
+
+# STROMER
+# PRODUCT_NAME := STROMER
+# PRODUCT_ID   := 1161111
+
+# REDSTREAM_PRO
+PRODUCT_NAME := REDSTREAM_PRO
+PRODUCT_ID   := xxxxxxx

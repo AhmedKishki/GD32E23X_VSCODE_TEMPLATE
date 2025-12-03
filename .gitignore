@@ -1,0 +1,9 @@
+.venv
+*.o
+*.su
+*.elf
+*.lst
+*.bin
+*.hex
+*.map
+*.json
