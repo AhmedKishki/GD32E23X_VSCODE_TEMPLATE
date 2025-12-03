@@ -1,0 +1,63 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (ST-LINK)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/debug/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceFolder}/openocd_stlink.cfg"
+            ],
+            "svdFile": "${workspaceFolder}/gd32e23x.svd",
+            "preLaunchTask": "debug",
+            "preRestartCommands": [
+                "load",
+                "continue"
+            ],
+            "showDevDebugOutput": "raw",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            "searchDir": [
+                "openocd",
+                "${workspaceFolder}"
+            ],
+            "gdbPath": "gdb-multiarch",
+            "serverpath": "openocd"
+        },
+            {
+            "name": "Debug (GD-LINK)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/debug/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "servertype": "openocd",
+            "configFiles": [
+                "${workspaceFolder}/openocd_gdlink.cfg"
+            ],
+            "svdFile": "${workspaceFolder}/gd32e23x.svd",
+            "preLaunchTask": "debug",
+            "preRestartCommands": [
+                "load",
+                "continue"
+            ],
+            "showDevDebugOutput": "raw",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            "searchDir": [
+                "openocd",
+                "${workspaceFolder}"
+            ],
+            "gdbPath": "gdb-multiarch",
+            "serverpath": "openocd"
+        }
+    ]
+}

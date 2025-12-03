@@ -1,0 +1,7 @@
+{
+    "cortex-debug.variableUseNaturalFormat": true,
+    "cmake.ignoreCMakeListsMissing": true,
+    "cmake.configureOnOpen": false,
+    "cmake.enableAutomaticKitScan": false,
+    "cmake.sourceDirectory": "${workspaceFolder}/nonexistent"
+}

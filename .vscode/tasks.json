@@ -1,0 +1,107 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build and Flash",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "make: debug",
+                "Flash MCU"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "debug",
+            "type": "shell",
+            "command": "bear",
+            "args": [
+                "--",
+                "make",
+                "clean",
+                "all"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "release",
+            "type": "shell",
+            "command": "bear",
+            "args": [
+                "--",
+                "make",
+                "clean",
+                "release",
+                "BUILD_DIR=build/release"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Flash MCU",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "${workspaceFolder}/openocd_gdlink.cfg",
+                "-c", "init; reset halt; program build/debug/${workspaceFolderBasename}.elf verify reset exit"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "clear": true,
+                "reveal": "always"
+            }
+        },
+        {
+            "label": "Reset MCU",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "${workspaceFolder}/openocd_gdlink.cfg",
+                "-c", "init; reset; exit"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "Mass Erase MCU",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "${workspaceFolder}/openocd_gdlink.cfg",
+                "-c", "init; reset halt; gd32e23x mass_erase 0; exit"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "clear": true
+            }
+        },
+        {
+            "label": "OpenOCD Server",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "${workspaceFolder}/openocd_gdlink.cfg"
+            ],
+            "isBackground": true,
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "clear": true
+            }
+        }
+    ]
+}
